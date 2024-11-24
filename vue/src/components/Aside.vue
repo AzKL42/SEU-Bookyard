@@ -1,106 +1,98 @@
 <template>
-    <div>
-    
-    
-      <el-menu
-          style="width: 200px; min-height: calc(100vh - 50px);"
-          :default-active="path"
-          class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
-          router
-          background-color="#30333c" text-color="#fff"
-      >
-        <el-menu-item index="/dashboard" >
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icondashboard "></use>
-          </svg>
-          <span>数据可视化</span>
-        </el-menu-item>
-        <el-sub-menu index="2" text-color="#fff">
-          <template #title>
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-mingpian "></use>
-            </svg>
-            <span>个人信息</span>
-          </template>
-          <el-menu-item index="/person" style="font-color: white">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-a-bianji1 "></use>
-            </svg>
-            <span>修改个人信息</span>
-          </el-menu-item>
-          <el-menu-item index="/password">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-mima "></use>
-            </svg>
-            <span>修改密码</span>
-          </el-menu-item>
-        </el-sub-menu>
-        <el-menu-item index="/user" v-if="user.role == 1">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconreader "></use>
-          </svg>
-          <span>读者管理</span>
-        </el-menu-item>
-        <el-menu-item index="/book" v-if="user.role == 1" >
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconbook "></use>
-          </svg>
-          <span>书籍管理</span>
-        </el-menu-item>
-        <el-menu-item index="/book" v-if="user.role == 2">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconbook "></use>
-          </svg>
-          <span>图书查询</span>
-        </el-menu-item>
-        <el-menu-item index="/lendrecord" v-if="user.role == 1">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconlend-record "></use>
-          </svg>
-          <span>借阅记录</span>
-        </el-menu-item>
-        <el-menu-item index="/lendrecord" v-if="user.role == 2">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#iconlend-record"></use>
-          </svg>
-          <span>借阅信息</span>
-        </el-menu-item>
-        <el-menu-item index="/bookwithuser" >
-          <el-icon><grid /></el-icon>
-          <span>借阅状态</span>
-        </el-menu-item>
-      </el-menu>
-    
-    </div>
-    </template>
-    
-    <script>
-    
-    
-    
-    export default {
-      name: "Aside",
-      components:{},
-      created(){
-        let userStr = sessionStorage.getItem("user") ||"{}"
-        this.user = JSON.parse(userStr)
-      },
-      data(){
-        return {
-          user:{},
-          path: this.$route.path
-        }
+  <el-aside width="200px" class="aside-container">
+    <el-menu
+      :default-active="activeMenu"
+      class="el-menu-vertical"
+      @select="handleMenuSelect"
+    >
+      <!-- 首页 -->
+      <el-menu-item index="home">
+        <el-icon><House /></el-icon>
+        <span>首页</span>
+      </el-menu-item>
+
+      <!-- 图书目录 -->
+      <el-sub-menu index="catalog">
+        <template #title>
+          <el-icon><Tickets /></el-icon>
+          <span>图书目录</span>
+        </template>
+        <el-menu-item index="catalog-all">全部图书</el-menu-item>
+        <el-menu-item index="catalog-categories">分类</el-menu-item>
+        <el-menu-item index="catalog-new">新书上架</el-menu-item>
+      </el-sub-menu>
+
+      <!-- 借阅记录 -->
+      <el-menu-item index="records">
+        <el-icon><Document /></el-icon>
+        <span>借阅记录</span>
+      </el-menu-item>
+
+      <!-- 快捷服务 -->
+      <el-sub-menu index="services">
+        <template #title>
+          <el-icon><Service /></el-icon>
+          <span>快速服务</span>
+        </template>
+        <el-menu-item index="services-renew">续借</el-menu-item>
+        <el-menu-item index="services-reserve">预约</el-menu-item>
+        <el-menu-item index="services-fines">缴纳罚款</el-menu-item>
+      </el-sub-menu>
+
+      <!-- 公告栏 -->
+      <el-menu-item index="announcements">
+        <el-icon><Bell /></el-icon>
+        <span>公告栏</span>
+      </el-menu-item>
+    </el-menu>
+  </el-aside>
+</template>
+
+<script>
+import { House, Document, Tickets, Service, Bell } from "@element-plus/icons-vue";
+
+export default {
+  name: "Aside",
+  data() {
+    return {
+      activeMenu: "home", // 默认激活的菜单项
+    };
+  },
+  methods: {
+    handleMenuSelect(index) {
+      console.log("Menu selected:", index);
+      // 路由跳转逻辑（根据项目需求修改）
+      if (index === "home") {
+        this.$router.push("/");
+      } else if (index === "catalog-all") {
+        this.$router.push("/catalog");
+      } else if (index === "records") {
+        this.$router.push("/records");
+      } else if (index === "services-renew") {
+        this.$router.push("/services/renew");
       }
-    }
-    </script>
-    
-    <style scoped>
-    .icon {
-      width: 30px;
-      height: 30px;
-      padding-top: 5px;
-      padding-right: 10px;
-    }
-    </style>
+    },
+  },
+};
+</script>
+
+<style scoped>
+.aside-container {
+  background-color: #f5f7fa;
+  height: 100vh; /* 确保侧边栏高度与页面一致 */
+  border-right: 1px solid #ebeef5;
+}
+
+.el-menu-vertical {
+  height: 100%;
+  border-right: none;
+}
+
+.el-menu-item {
+  font-size: 14px;
+}
+
+.el-submenu .el-menu-item {
+  font-size: 13px;
+}
+</style>
