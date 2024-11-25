@@ -43,8 +43,8 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>个人资料</el-dropdown-item>
-                <el-dropdown-item>登出</el-dropdown-item>
+                <el-dropdown-item @click.native="goToProfile">个人资料</el-dropdown-item>
+                <el-dropdown-item @click.native="handleLogout">登出</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>

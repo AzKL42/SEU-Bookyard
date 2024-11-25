@@ -3,7 +3,7 @@
     <h1>Login</h1>
     <!-- 用户名输入框 -->
     <el-form-item prop="username" class="login-input-box">
-      <el-input v-model="form.username" placeholder="Enter your username">
+      <el-input v-model="form.username" placeholder="请输入用户名">
         <template #suffix>
           <el-icon><User /></el-icon>
         </template>
@@ -12,11 +12,25 @@
 
     <!-- 密码输入框 -->
     <el-form-item prop="password" class="login-input-box">
-      <el-input v-model="form.password" type="password" placeholder="Enter your password">
+      <el-input v-model="form.password" type="password" placeholder="请输入密码">
         <template #suffix>
           <el-icon><Lock /></el-icon>
         </template>
       </el-input>
+    </el-form-item>
+
+    <!-- 验证码输入框 -->
+    <el-form-item class="login-input-box" prop="verificationCode">
+        <div style="display: flex">
+          <el-input  v-model="form.verificationCode"  placeholder="请输入验证码">
+            <template #suffix>
+              <el-icon><Promotion /></el-icon>
+            </template>
+            <template #append>
+              <ValidCode v-model="form.verificationCode" class="valid-code" @input="createValidCode" />
+            </template>
+          </el-input>          
+        </div>
     </el-form-item>
 
     <!-- 忘记密码 -->
@@ -35,11 +49,19 @@
 import { reactive, ref } from "vue";
 import { User, Lock } from "@element-plus/icons-vue";
 
+import request from "../utils/request";
+import {ElMessage} from "element-plus";
+import ValidCode from "../components/Validate.vue";
+
 export default {
+  components: {
+    ValidCode,
+  },
   setup() {
     const form = reactive({
       username: "",
       password: "",
+      verificationCode: "",
     });
 
     const rules = {
@@ -49,17 +71,39 @@ export default {
       password: [
         { required: true, message: "Please input your password", trigger: "blur" },
       ],
+      verificationCode: [
+        { required: true, message: "Please input verification code", trigger: "blur" },
+      ],
     };
 
     const loginForm = ref(null);
 
+    const createValidCode = (value) => {
+      // form.verificationCode = value;
+    };
+
     const handleLogin = () => {
       loginForm.value.validate((valid) => {
-        if (valid) {
-          console.log("Login successful!", form);
-        } else {
-          console.error("Validation failed");
-        }
+        // if (valid) {
+        //   // 调用后端接口进行登录验证
+        //   request.post("/api/login", {
+        //     username: form.username,
+        //     password: form.password,
+        //     verificationCode: form.verificationCode
+        //   }).then(response => {
+        //     if (response.data.success) {
+        //       ElMessage.success("Login successful!");
+        //       // 跳转到主页或其他页面
+        //       // this.$router.push("/");
+        //     } else {
+        //       ElMessage.error("Login failed: " + response.data.message);
+        //     }
+        //   }).catch(error => {
+        //     ElMessage.error("Request error: " + error.message);
+        //   });
+        // } else {
+        //   console.error("Validation failed");
+        // }
       });
     };
 
@@ -68,6 +112,7 @@ export default {
       rules,
       loginForm,
       handleLogin,
+      createValidCode
     };
   },
 };

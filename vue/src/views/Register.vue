@@ -3,7 +3,7 @@
     <h1>Register</h1>
     <!-- 用户名输入框 -->
     <el-form-item prop="username" class="register-input-box">
-      <el-input v-model="form.username" placeholder="Enter your username">
+      <el-input v-model="form.username" placeholder="请输入用户名">
         <template #suffix>
           <el-icon><User /></el-icon>
         </template>
@@ -12,7 +12,7 @@
 
     <!-- 邮箱输入框 -->
     <el-form-item prop="email" class="register-input-box">
-      <el-input v-model="form.email" placeholder="Enter your email">
+      <el-input v-model="form.email" placeholder="请输入邮箱地址">
         <template #suffix>
           <el-icon><Message /></el-icon>
         </template>
@@ -21,11 +21,25 @@
 
     <!-- 密码输入框 -->
     <el-form-item prop="password" class="register-input-box">
-      <el-input v-model="form.password" type="password" placeholder="Enter your password">
+      <el-input v-model="form.password" type="password" placeholder="请输入密码">
         <template #suffix>
           <el-icon><Lock /></el-icon>
         </template>
       </el-input>
+    </el-form-item>
+
+    <!-- 验证码输入框 -->
+    <el-form-item class="register-input-box" prop="verificationCode">
+      <div style="display: flex">
+        <el-input  v-model="form.verificationCode"  placeholder="请输入验证码">
+          <template #suffix>
+            <el-icon><Promotion /></el-icon>
+          </template>
+          <template #append>
+            <ValidCode v-model="form.verificationCode" class="valid-code" @input="createValidCode" />
+          </template>
+        </el-input>          
+      </div>
     </el-form-item>
 
     <!-- 注册按钮 -->
@@ -38,30 +52,42 @@
 <script>
 import { reactive, ref } from "vue";
 import { User, Message, Lock } from "@element-plus/icons-vue";
+import ValidCode from "../components/Validate.vue";
 
 export default {
+  components: {
+    ValidCode,
+  },
   setup() {
     const form = reactive({
       username: "",
       email: "",
       password: "",
+      verificationCode: "",
     });
 
     const rules = {
       username: [
-        { required: true, message: "Please input your username", trigger: "blur" },
+        { required: true, message: "请输入用户名", trigger: "blur" },
       ],
       email: [
-        { required: true, message: "Please input your email", trigger: "blur" },
-        { type: "email", message: "Please enter a valid email address", trigger: "blur" },
+        { required: true, message: "请输入邮箱地址", trigger: "blur" },
+        { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" },
       ],
       password: [
-        { required: true, message: "Please input your password", trigger: "blur" },
-        { min: 6, message: "Password must be at least 6 characters long", trigger: "blur" },
+        { required: true, message: "请输入密码", trigger: "blur" },
+        { min: 6, message: "密码长度不能少于6位", trigger: "blur" },
+      ],
+      verificationCode: [
+        { required: true, message: "请输入验证码", trigger: "blur" },
       ],
     };
 
     const registerForm = ref(null);
+
+    const createValidCode = (value) => {
+      // form.verificationCode = value;
+    };
 
     const handleRegister = () => {
       registerForm.value.validate((valid) => {
@@ -78,6 +104,7 @@ export default {
       rules,
       registerForm,
       handleRegister,
+      createValidCode,
     };
   },
 };

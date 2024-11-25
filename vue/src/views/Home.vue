@@ -56,11 +56,13 @@
 
       <!-- 中间主内容 -->
       <el-main>
-  <div class="background-container">
-    <!-- 背景图片 -->
-    <div class="background-image"></div>
-  </div>
-</el-main>
+        <div class="background-container">
+          <!-- 背景图片 -->
+          <div class="background-image">
+            
+          </div>
+        </div>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -76,6 +78,7 @@ const item = {
   address: '河南省南阳市桐柏县',
 };
 const tableData = ref(Array.from({ length: 10 }).fill(item));
+
 </script>
 
 <style scoped>

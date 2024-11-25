@@ -1,16 +1,23 @@
 <template>
   <!-- <Toggle /> -->
-  <!-- <Home /> -->
-  <!-- <router-link to="/Home">首页</router-link>
-  <router-link to="/Login">Toggle</router-link>
-  <router-view /> -->
-  <Layout />
+  <!-- <router-view /> -->
+  <!-- <Layout /> -->
+  <!-- <User /> -->
+  <!-- <Person /> -->
+  <!-- <Book /> -->
+  <Forget />
+  <!-- <div style="overflow-y:hidden;overflow-x: hidden">
+    <router-view />
+  </div> -->
 </template>
 
 <script setup>
 import Toggle from './views/Toggle.vue';
-import Home from './views/Home.vue';
 import Layout from './layout/Layout.vue';
+import User from './views/User.vue';
+import Person from './views/Person.vue';
+import Forget from './views/Forget.vue';
+// import Book from './views/Book.vue';
 
 </script>
 

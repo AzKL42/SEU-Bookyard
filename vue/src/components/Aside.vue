@@ -17,9 +17,18 @@
           <el-icon><Tickets /></el-icon>
           <span>图书目录</span>
         </template>
-        <el-menu-item index="catalog-all">全部图书</el-menu-item>
-        <el-menu-item index="catalog-categories">分类</el-menu-item>
-        <el-menu-item index="catalog-new">新书上架</el-menu-item>
+        <el-menu-item index="catalog-all">
+          <el-icon><Grid /></el-icon>
+          <span>全部图书</span>
+        </el-menu-item>
+        <el-menu-item index="catalog-categories">
+          <el-icon><Histogram /></el-icon>
+          <span>分类目录</span>
+        </el-menu-item>
+        <el-menu-item index="catalog-new">
+          <el-icon><Opportunity /></el-icon>
+          <span>新书上架</span>
+        </el-menu-item>
       </el-sub-menu>
 
       <!-- 借阅记录 -->
@@ -34,9 +43,18 @@
           <el-icon><Service /></el-icon>
           <span>快速服务</span>
         </template>
-        <el-menu-item index="services-renew">续借</el-menu-item>
-        <el-menu-item index="services-reserve">预约</el-menu-item>
-        <el-menu-item index="services-fines">缴纳罚款</el-menu-item>
+        <el-menu-item index="services-renew">
+          <el-icon><Calendar /></el-icon>
+          <span>续借</span>
+        </el-menu-item>
+        <el-menu-item index="services-reserve">
+          <el-icon><Management /></el-icon>
+          <span>预约</span>
+        </el-menu-item>
+        <el-menu-item index="services-fines">
+          <el-icon><WarningFilled /></el-icon>
+          <span>罚款管理</span>
+        </el-menu-item>
       </el-sub-menu>
 
       <!-- 公告栏 -->
@@ -49,7 +67,7 @@
 </template>
 
 <script>
-import { House, Document, Tickets, Service, Bell } from "@element-plus/icons-vue";
+import { House, Document, Tickets, Service, Bell, Grid, Histogram, Opportunity, Management, WarningFilled } from "@element-plus/icons-vue";
 
 export default {
   name: "Aside",
