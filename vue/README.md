@@ -8,6 +8,7 @@
 
 ## 项目结构
 
+```sh
 seu-bookyard/
 ├── public/                   # 静态资源目录
 │   ├── index.html            # 主HTML文件
@@ -32,6 +33,7 @@ seu-bookyard/
 ├── package.json              # 项目配置文件，包括依赖项和脚本命令
 ├── tsconfig.json             # TypeScript编译选项配置文件（如果有使用TypeScript）
 └── README.md                 # 项目说明文档
+```
 
 ## Customize configuration
 
