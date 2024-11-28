@@ -1,3 +1,5 @@
+<!-- 登录注册界面 -->
+
 <template>
   <div class="login-register">
     <div class="container" :class="{ 'active': !isLogin }">
@@ -10,13 +12,13 @@
       <div class="toggle-box">
         <div class="toggle-panel toggle-left">
           <h1>Hello, Welcome!</h1>
-          <p>Don't have an account?</p>
-          <el-button type="primary" @click="toggleToRegister" class="btn register-btn">Register</el-button>
+          <p>还没有账户?</p>
+          <el-button type="primary" @click="toggleToRegister" class="btn register-btn">注册</el-button>
         </div>
         <div class="toggle-panel toggle-right">
           <h1>Welcome Back!</h1>
-          <p>Already have an account?</p>
-          <el-button type="primary" @click="toggleToLogin" class="btn login-btn">Login</el-button>
+          <p>已有账户?</p>
+          <el-button type="primary" @click="toggleToLogin" class="btn login-btn">登录</el-button>
         </div>
       </div>
     </div>

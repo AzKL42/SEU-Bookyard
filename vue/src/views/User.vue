@@ -1,17 +1,23 @@
+<!-- 管理员对用户的操作界面 -->
+
 <template>
   <div class="home" style ="padding: 10px">
-  <!-- 按钮-->
-  <!-- 搜索-->
+    <!-- 按钮-->
+    <!-- 搜索-->
     <div style="margin: 10px 0;">
       <el-form inline="true" size="small">
         <el-form-item label="读者编号" >
-      <el-input v-model="search1" placeholder="请输入读者编号"  clearable>
-        <template #prefix><el-icon class="el-input__icon"><search/></el-icon></template>
-      </el-input>
-          </el-form-item >
+          <el-input v-model="search1" placeholder="请输入读者编号"  clearable>
+            <template #prefix>
+              <el-icon class="el-input__icon"><search/></el-icon>
+            </template>
+          </el-input>
+        </el-form-item >
         <el-form-item label="姓名" >
           <el-input v-model="search2" placeholder="请输入姓名"  clearable>
-            <template #prefix><el-icon class="el-input__icon"><search /></el-icon></template>
+            <template #prefix>
+              <el-icon class="el-input__icon"><search /></el-icon>
+            </template>
           </el-input>
         </el-form-item >
         <el-form-item label="电话号码" >
@@ -113,7 +119,7 @@
 // @ is an alias to /src
 import request from "../utils/request";
 import {ElMessage} from "element-plus";
-import router from "@/router";
+import router from "../router";
 
 export default {
   created(){

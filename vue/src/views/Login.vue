@@ -1,6 +1,6 @@
 <template>
   <el-form ref="loginForm" :model="form" :rules="rules" class="login-form">
-    <h1>Login</h1>
+    <h1>东大书苑登录</h1>
     <!-- 用户名输入框 -->
     <el-form-item prop="username" class="login-input-box">
       <el-input v-model="form.username" placeholder="请输入用户名">
@@ -35,12 +35,17 @@
 
     <!-- 忘记密码 -->
     <el-form-item class="forgot-link">
-      <el-link href="#">Forgot Password?</el-link>
+      <el-button type="text" @click="$router.push('/forget')">忘记密码?</el-button>
     </el-form-item>
 
     <!-- 登录按钮 -->
     <el-form-item>
-      <el-button type="primary" @click="handleLogin" class="btn">Login</el-button>
+      <el-button type="primary" @click="handleLogin" class="btn">登录</el-button>
+    </el-form-item>
+
+    <!-- 测试按钮 -->
+    <el-form-item>
+      <el-button type="primary" @click="$router.push('/')" class="btn">直接登录</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -54,6 +59,7 @@ import {ElMessage} from "element-plus";
 import ValidCode from "../components/Validate.vue";
 
 export default {
+  name: "Login",
   components: {
     ValidCode,
   },
@@ -83,28 +89,28 @@ export default {
     };
 
     const handleLogin = () => {
-      loginForm.value.validate((valid) => {
-        // if (valid) {
-        //   // 调用后端接口进行登录验证
-        //   request.post("/api/login", {
-        //     username: form.username,
-        //     password: form.password,
-        //     verificationCode: form.verificationCode
-        //   }).then(response => {
-        //     if (response.data.success) {
-        //       ElMessage.success("Login successful!");
-        //       // 跳转到主页或其他页面
-        //       // this.$router.push("/");
-        //     } else {
-        //       ElMessage.error("Login failed: " + response.data.message);
-        //     }
-        //   }).catch(error => {
-        //     ElMessage.error("Request error: " + error.message);
-        //   });
-        // } else {
-        //   console.error("Validation failed");
-        // }
-      });
+      // loginForm.value.validate((valid) => {
+      //   // if (valid) {
+      //   //   // 调用后端接口进行登录验证
+      //   //   request.post("/api/login", {
+      //   //     username: form.username,
+      //   //     password: form.password,
+      //   //     verificationCode: form.verificationCode
+      //   //   }).then(response => {
+      //   //     if (response.data.success) {
+      //   //       ElMessage.success("Login successful!");
+      //   //       // 跳转到主页或其他页面
+      //   //       // this.$router.push("/");
+      //   //     } else {
+      //   //       ElMessage.error("Login failed: " + response.data.message);
+      //   //     }
+      //   //   }).catch(error => {
+      //   //     ElMessage.error("Request error: " + error.message);
+      //   //   });
+      //   // } else {
+      //   //   console.error("Validation failed");
+      //   // }
+      // });
     };
 
     return {

@@ -1,6 +1,6 @@
 <template>
   <el-form ref="registerForm" :model="form" :rules="rules" class="register-form">
-    <h1>Register</h1>
+    <h1>注册</h1>
     <!-- 用户名输入框 -->
     <el-form-item prop="username" class="register-input-box">
       <el-input v-model="form.username" placeholder="请输入用户名">
@@ -44,7 +44,7 @@
 
     <!-- 注册按钮 -->
     <el-form-item>
-      <el-button type="primary" @click="handleRegister" class="btn">Register</el-button>
+      <el-button type="primary" @click="handleRegister" class="btn">注册</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -90,13 +90,13 @@ export default {
     };
 
     const handleRegister = () => {
-      registerForm.value.validate((valid) => {
-        if (valid) {
-          console.log("Registration successful!", form);
-        } else {
-          console.error("Validation failed");
-        }
-      });
+      // registerForm.value.validate((valid) => {
+      //   if (valid) {
+      //     console.log("Registration successful!", form);
+      //   } else {
+      //     console.error("Validation failed");
+      //   }
+      // });
     };
 
     return {
