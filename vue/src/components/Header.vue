@@ -144,6 +144,10 @@ export default {
   font-size: 16px;
 }
 
+.nav-links .el-link {
+  color: #333;
+}
+
 .user-actions {
   display: flex;
   align-items: center;
