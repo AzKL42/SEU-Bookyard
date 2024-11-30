@@ -1,4 +1,8 @@
-<!-- 登录注册界面 -->
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 集合了登录和注册的页面，并添加以切换效果
+-->
 
 <template>
   <div class="login-register">

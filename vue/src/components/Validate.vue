@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 验证码组件
+-->
+
 <template>
     <div
         class="ValidCode disabled-select"

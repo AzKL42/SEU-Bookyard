@@ -1,3 +1,9 @@
+/**
+ * @author ApplePie
+ * @date 2024-11-30
+ * @description 请求封装
+ */
+
 import axios from 'axios'
 import router from "../router";
 

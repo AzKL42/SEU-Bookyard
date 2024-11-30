@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 首页布局页面
+-->
+
 <template>
   <Header />
   <!--    主体-->
@@ -10,7 +16,7 @@
       <template v-if="$route.name === 'Home'">
         <div class="module-row">
           <Carousel />
-          <Announcement />
+          <AnnouncementInHome />
         </div>
         <div class="module-row">
           <BookRecommendation />
@@ -28,7 +34,7 @@ import Header from "../components/Header.vue";
 import Aside from "../components/Aside.vue";
 import Carousel from "../components/Carousel.vue";
 import BookRecommendation from "../components/BookRecommendation.vue";
-import Announcement from "../components/Announcement.vue";
+import AnnouncementInHome from "../components/AnnouncementInHome.vue";
 
 export default {
   name: "Layout",
@@ -37,7 +43,7 @@ export default {
     Aside,
     Carousel,
     BookRecommendation,
-    Announcement
+    AnnouncementInHome
   }
 }
 </script>

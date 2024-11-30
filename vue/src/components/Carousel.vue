@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 首页轮播图（走马灯）组件
+-->
+
 <template>
   <el-carousel :interval="4000" type="card" height="480px">
     <el-carousel-item v-for="(image, index) in images" :key="index">

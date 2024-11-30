@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 首页侧边栏组件
+-->
+
 <template>
   <el-aside width="200px" class="aside-container">
     <el-menu
@@ -84,10 +90,16 @@ export default {
         this.$router.push("/");
       } else if (index === "catalog-all") {
         this.$router.push("/catalog");
+      } else if (index === "catalog-categories") {
+        this.$router.push("/catalogbycategory");
       } else if (index === "records") {
         this.$router.push("/records");
       } else if (index === "services-renew") {
         this.$router.push("/services/renew");
+      } else if (index === "services-reserve") {
+        this.$router.push("/services/reserve");
+      } else if (index === "announcements") {
+        this.$router.push("/announcements");
       }
     },
   },

@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 全部图书目录页面
+-->
+
 <template>
     <div class="catalog">
       <div class="catalog-header">
@@ -35,7 +41,7 @@
   </template>
   
 <script>
-import BookCard from "@/components/BookCard.vue";
+import BookCard from "@/components/Bookcard.vue";
 import { Search } from "@element-plus/icons-vue";
 
 export default {

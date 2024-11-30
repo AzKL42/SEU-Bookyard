@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 首页图书推荐组件
+-->
+
 <template>
     <el-card style="max-width: 100%; max-height: 100%; margin: auto;;" class="recommendation-container" shadow="always">
         <template #header>
@@ -7,8 +13,8 @@
         </template>
         <div class="book-list">
             <div v-for="book in books" :key="book.id" class="book-item">
-            <img :src="book.cover" alt="Book Cover" />
-            <p>{{ book.title }}</p>
+              <img :src="book.cover" alt="Book Cover" />
+              <p>{{ book.title }}</p>
             </div>
         </div>
     </el-card>
@@ -46,8 +52,8 @@
   }
   .book-item {
     text-align: center;
-    width: 200px;
-    height: 250px;
+    width: 14%;
+    height: 50%;
   }
   </style>
   

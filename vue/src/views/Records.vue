@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 借阅记录页面
+-->
+
 <template>
     <div class="record">
       <div class="record-header">
@@ -10,12 +16,18 @@
       </div>
   
       <!-- 借阅记录表格 -->
-      <el-table :data="paginatedRecords" :default-sort="{ prop: 'borrowDate', order: 'descending' }" border style="width: 100%;">
-        <el-table-column prop="title" label="书名" width="250" ></el-table-column>
-        <el-table-column prop="name" label="借阅人" width="250"></el-table-column>
-        <el-table-column prop="borrowDate" label="借阅日期" sortable width="250"></el-table-column>
-        <el-table-column prop="returnDate" label="归还日期" width="250"></el-table-column>
-        <el-table-column prop="status" label="状态" width="120">
+      <el-table 
+        :data="paginatedRecords" 
+        :default-sort="{ prop: 'borrowDate', order: 'descending' }" 
+        border 
+        stripe
+        style="width: 100%;"
+      >
+        <el-table-column prop="title" label="书名" style="width: 20%;" ></el-table-column>
+        <el-table-column prop="name" label="借阅人" style="width: 20%;"></el-table-column>
+        <el-table-column prop="borrowDate" label="借阅日期" sortable style="width: 20%;"></el-table-column>
+        <el-table-column prop="returnDate" label="归还日期" style="width: 20%;"></el-table-column>
+        <el-table-column prop="status" label="状态" style="width: 20%;">
           <template #default="scope">
             <el-tag :type="getStatusType(scope.row.status)">
               {{ scope.row.status === "borrowed" ? "Borrowed" : "Returned" }}
@@ -221,22 +233,23 @@
   };
   </script>
   
-  <style scoped>
-  .record {
-    padding: 20px;
-  }
-  
-  .record-header {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
+<style scoped>
+.record {
+  padding: 20px;
+}
 
-  .pagination-container {
-    position: fixed;
-    bottom: 20px; /* 距离页面底部的距离 */
-    left: 50%; /* 水平居中 */
-    transform: translateX(-50%); /* 水平居中偏移 */
-  }
-  </style>
+.record-header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pagination-container {
+  position: fixed;
+  bottom: 20px; /* 距离页面底部的距离 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 水平居中偏移 */
+  z-index: 10; /* 保证能显示在所有组件上方，防止遮挡（有没有更好的办法？） */
+}
+</style>
   

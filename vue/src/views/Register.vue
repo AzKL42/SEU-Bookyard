@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 注册页面
+-->
+
 <template>
   <el-form ref="registerForm" :model="form" :rules="rules" class="register-form">
     <h1>注册</h1>

@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 用户信息组件
+-->
+
 <template>
     <el-descriptions 
         title="个人信息"
@@ -18,7 +24,8 @@
       </el-descriptions-item>
       <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
       <el-descriptions-item label="电话">18100000000</el-descriptions-item>
-      <el-descriptions-item label="位置">Suzhou</el-descriptions-item>
+      <el-descriptions-item label="邮箱">1260164428@qq.com</el-descriptions-item>
+      <el-descriptions-item label="权限">管理员</el-descriptions-item>
       <el-descriptions-item label="Remarks">
         <el-tag size="small">School</el-tag>
       </el-descriptions-item>
@@ -26,4 +33,85 @@
         No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
       </el-descriptions-item>
     </el-descriptions>
+    
+    <div class="btn-container">
+      <el-button type="primary" size="mini" @click="handleEdit" class="btn">修改信息</el-button>
+      <el-button type="primary" size="mini" @click="handleChangePwd" class="btn">修改密码</el-button>
+    </div>
+
+    <el-divider></el-divider>
+    <div style="display: flex; justify-content: space-between; margin-top: 20px">
+      <!-- 超期图书 -->
+      <el-card style="width: 20%">
+        <template #header>
+          <div class="card-header">
+            <h3>超期图书</h3>
+          </div>
+        </template>
+        <p v-for="o in 4" :key="o" class="text item">{{ 'List item' + o }}</p>
+      </el-card>
+      <!-- 预约到书 -->
+      <el-card style="width: 20%">
+        <template #header>
+          <div class="card-header">
+            <h3>预约到书</h3>
+          </div>
+        </template>
+        <p v-for="o in 4" :key="o" class="text item">{{ 'List item' + o }}</p>
+      </el-card>
+      <!-- 已借图书 -->
+      <el-card style="width: 20%">
+        <template #header>
+          <div class="card-header">
+            <h3>已借图书</h3>
+          </div>
+        </template>
+        <p v-for="o in 4" :key="o" class="text item">{{ 'List item' + o }}</p>
+      </el-card>
+      <!-- 推荐购书 -->
+      <el-card style="width: 20%">
+        <template #header>
+          <div class="card-header">
+            <h3>推荐购书</h3>
+          </div>
+        </template>
+        <p v-for="o in 4" :key="o" class="text item">{{ 'List item' + o }}</p>
+      </el-card>
+    </div>
 </template>
+
+<script>
+export default {
+  name: "UserInfo",
+  methods: {
+    handleEdit() {
+      this.$router.push("/edit-user-info");
+    },
+    handleChangePwd() {
+      this.$router.push("/change-pwd");
+    }
+  }
+};
+</script>
+
+<style scoped>
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  width: 50%;
+  height: 48px;
+  background: #7494ec;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: none;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+</style>

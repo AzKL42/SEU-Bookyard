@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 个人中心页面
+-->
+
 <template>
     <div class="profile">
       <div class="profile-header">
@@ -8,21 +14,15 @@
   
       <!-- 用户信息组件 -->
       <UserInfo :user="user" @update="updateUserInfo" />
-  
-      <el-divider></el-divider>
-  
-      <!-- 修改密码组件 -->
-      <!-- <ChangePassword @password-updated="handlePasswordUpdated" /> -->
     </div>
   </template>
   
   <script>
   import UserInfo from "@/components/UserInfo.vue";
-  import ChangePassword from "@/components/ChangePassword.vue";
   
   export default {
     name: "Profile",
-    components: { UserInfo, ChangePassword },
+    components: { UserInfo },
     data() {
       return {
         user: {
@@ -44,13 +44,13 @@
   };
   </script>
   
-  <style scoped>
-  .profile {
-    padding: 20px;
-  }
-  .profile-header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  </style>
+<style scoped>
+.profile {
+  padding: 20px;
+}
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+</style>
   

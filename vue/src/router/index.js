@@ -1,3 +1,10 @@
+/**
+ * @author ApplePie
+ * @date 2024-11-30 16:39:58
+ * @version 0.0.1
+ * @description 路由配置
+ */
+
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '../layout/Layout.vue'
 
@@ -9,11 +16,6 @@ const routes = [
     component: Layout,
     children: [
       {
-        path: 'user',
-        name: 'User',
-        component: () => import('@/views/User.vue')
-      },
-      {
         path: 'profile',
         name: 'Profile',
         component: () => import('@/views/Profile.vue')
@@ -24,10 +26,40 @@ const routes = [
         component: () => import('@/views/Catalog.vue')
       },
       {
+        path: 'catalogbycategory',
+        name: 'CatalogByCategory',
+        component: () => import('@/views/CatalogByCategory.vue')
+      },
+      {
         path: 'records',
         name: 'Records',
         component: () => import('@/views/Records.vue')
       },
+      {
+        path: "/services/renew",
+        name: "Renew",
+        component: () => import("@/views/Renew.vue"),
+      },
+      {
+        path: "/services/reserve",
+        name: "Reserve",
+        component: () => import("@/views/Reservation.vue"),
+      },
+      {
+        path: "/announcements",
+        name: "Announcements",
+        component: () => import("@/views/Announcement.vue"),
+      },
+      // {
+      //   path: "/announcements/:id",
+      //   name: "AnnouncementDetail",
+      //   component: () => import("@/views/AnnouncementDetail.vue"),
+      // },
+      {
+        path: '/change-pwd',
+        name: 'Change-pwd',
+        component: () => import('@/views/ChangePassword.vue')
+      }
     ]
   },
   {

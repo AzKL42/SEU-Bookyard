@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 书本展示卡片组件
+-->
+
 <template>
     <div class="book-card">
       <img :src="book.cover" :alt="book.title" class="book-cover" />

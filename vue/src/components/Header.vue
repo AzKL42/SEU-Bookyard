@@ -1,3 +1,9 @@
+<!--
+  @author: <Applepie>
+  @date: 2024/11/29
+  @description: 首页头部组件
+-->
+
 <template>
   <el-header class="header-container">
     <!-- 左侧：Logo和名称 -->
