@@ -15,8 +15,12 @@
       <!-- 静态模块 -->
       <template v-if="$route.name === 'Home'">
         <div class="module-row">
-          <Carousel />
-          <AnnouncementInHome />
+          <div class="module-col-left">
+            <Carousel />
+          </div>
+          <div class="module-col-right">
+            <AnnouncementInHome />
+          </div>
         </div>
         <div class="module-row">
           <BookRecommendation />
@@ -57,10 +61,18 @@ export default {
   margin-bottom: 20px; /* 模块行之间的间距 */
   margin-top: 10px; /* 模块行与顶部的间距 */
 }
-
+ 
 .module-row > * {
-  flex: 1; /* 每个模块占据相等的空间 */
+  flex: 1; /* 元素的宽度占满剩余空间 */
   margin: 0 10px; /* 模块之间的间距 */
+}
+
+.module-col-left {
+  flex: 5;
+}
+
+.module-col-right {
+  flex: 3;
 }
 
 </style>
