@@ -39,6 +39,7 @@ import Aside from "../components/Aside.vue";
 import Carousel from "../components/Carousel.vue";
 import BookRecommendation from "../components/BookRecommendation.vue";
 import AnnouncementInHome from "../components/AnnouncementInHome.vue";
+import router from "@/router";
 
 export default {
   name: "Layout",
@@ -48,7 +49,7 @@ export default {
     Carousel,
     BookRecommendation,
     AnnouncementInHome
-  }
+  },
 }
 </script>
 

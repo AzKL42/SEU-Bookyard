@@ -17,6 +17,16 @@
                 <el-icon><Search /></el-icon>
             </template>
         </el-input>
+
+        <el-button class="sort-btn" @click="sortBooksBySales">
+          按借阅量排序<el-icon><Sort /></el-icon>
+        </el-button>
+        <el-button class="sort-btn" @click="sortBooksByDate">
+          按上新时间排序<el-icon><Sort /></el-icon>
+        </el-button>
+        <el-button class="sort-btn" @click="sortBooksByStore">
+          按库存量排序<el-icon><Sort /></el-icon>
+        </el-button>
       </div>
   
       <div class="book-list">
@@ -43,6 +53,7 @@
 <script>
 import BookCard from "@/components/Bookcard.vue";
 import { Search } from "@element-plus/icons-vue";
+import request from "@/utils/request";
 
 export default {
     name: "Catalog",
@@ -51,50 +62,30 @@ export default {
     },
     data() {
         return {
-            books: [
-                { id: 1, title: "Book 1", author: "Author 1", cover: "/img/book1.jpg" },
-                { id: 2, title: "Book 2", author: "Author 2", cover: "/img/book2.jpg" },
-                { id: 3, title: "Book 3", author: "Author 3", cover: "/img/book3.jpg" },
-                { id: 4, title: "Book 4", author: "Author 4", cover: "/img/Walden.jpg" },
-                { id: 5, title: "Book 5", author: "Author 5", cover: "/img/CyberSecurity.jpg" },
-                { id: 6, title: "Book 6", author: "Author 6", cover: "/img/Underwater.jpg" },
-                { id: 7, title: "Book 7", author: "Author 7", cover: "/img/Thousand.jpg" },
-                { id: 8, title: "Book 8", author: "Author 8", cover: "/img/TianlongBaBu.jpg" },
-                { id: 9, title: "Book 9", author: "Author 9", cover: "/img/PartyBuilding.jpg" },
-                { id: 10, title: "Book 10", author: "Author 10", cover: "/img/JaneEyre.jpg" },
-                { id: 11, title: "Book 1", author: "Author 1", cover: "/img/book1.jpg" },
-                { id: 12, title: "Book 2", author: "Author 2", cover: "/img/book2.jpg" },
-                { id: 13, title: "Book 3", author: "Author 3", cover: "/img/book3.jpg" },
-                { id: 14, title: "Book 4", author: "Author 4", cover: "/img/Walden.jpg" },
-                { id: 15, title: "Book 5", author: "Author 5", cover: "/img/CyberSecurity.jpg" },
-                { id: 16, title: "Book 6", author: "Author 6", cover: "/img/Underwater.jpg" },
-                { id: 17, title: "Book 7", author: "Author 7", cover: "/img/Thousand.jpg" },
-                { id: 18, title: "Book 8", author: "Author 8", cover: "/img/TianlongBaBu.jpg" },
-                { id: 19, title: "Book 9", author: "Author 9", cover: "/img/PartyBuilding.jpg" },
-                { id: 20, title: "Book 10", author: "Author 10", cover: "/img/JaneEyre.jpg" },
-                { id: 21, title: "Book 1", author: "Author 1", cover: "/img/book1.jpg" },
-                { id: 22, title: "Book 2", author: "Author 2", cover: "/img/book2.jpg" },
-                { id: 23, title: "Book 3", author: "Author 3", cover: "/img/book3.jpg" },
-                { id: 24, title: "Book 4", author: "Author 4", cover: "/img/Walden.jpg" },
-                { id: 25, title: "Book 5", author: "Author 5", cover: "/img/CyberSecurity.jpg" },
-                { id: 26, title: "Book 6", author: "Author 6", cover: "/img/Underwater.jpg" },
-                { id: 27, title: "Book 7", author: "Author 7", cover: "/img/Thousand.jpg" },
-                { id: 28, title: "Book 8", author: "Author 8", cover: "/img/TianlongBaBu.jpg" },
-                { id: 29, title: "Book 9", author: "Author 9", cover: "/img/PartyBuilding.jpg" },
-                { id: 30, title: "Book 10", author: "Author 10", cover: "/img/JaneEyre.jpg" },
-                // 添加更多图书数据
-            ],
-            searchQuery: "",
-            currentPage: 1,
-            pageSize: 14, // 每页显示的图书数量
+          books: [
+              // { id: 1, title: "Book 1", author: "Author 1", cover: "/img/book1.jpg" },
+              // { id: 2, title: "Book 2", author: "Author 2", cover: "/img/book2.jpg" },
+              // { id: 3, title: "Book 3", author: "Author 3", cover: "/img/book3.jpg" },
+              // { id: 4, title: "Book 4", author: "Author 4", cover: "/img/Walden.jpg" },
+              // { id: 5, title: "Book 5", author: "Author 5", cover: "/img/CyberSecurity.jpg" },
+              // { id: 6, title: "Book 6", author: "Author 6", cover: "/img/Underwater.jpg" },
+              // 添加更多图书数据
+          ],
+          searchQuery: "",
+          currentPage: 1,
+          pageSize: 14, // 每页显示的图书数量
+
+          // 以下是排序相关的属性
+          sortField: null, // 排序类型，默认无排序
+          sortOrder: "desc", // 排序顺序，默认降序
         };
     },
     computed: {
         filteredBooks() {
             // 根据搜索关键字过滤图书
             return this.books.filter((book) =>
-                book.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
+                book.bname.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
         },
         paginatedBooks() {
             // 根据当前页码分页
@@ -103,13 +94,71 @@ export default {
             return this.filteredBooks.slice(start, end);
         },
     },
+    created() {
+      this.fetchBooks();
+    },
     methods: {
+        fetchBooks() {
+          request.get('/books/all')
+            .then(response => {
+              this.books = response.data.content; // 获取到所有图书数据
+              console.log('Fetched Books:', this.books);
+              //sessionStorage.setItem('books', JSON.stringify(response));
+            })
+            .catch(error => {
+              console.error('Error fetching books:', error);
+            });
+        },
         handleSearch() {
             // 重置分页到第一页
             this.currentPage = 1;
         },
         handlePageChange(page) {
             this.currentPage = page;
+        },
+        handleSort(field) {
+          if (this.sortField === field) {
+              // 如果是相同的字段，则切换排序顺序
+              this.sortOrder = this.sortOrder === 'desc' ? 'asc' : 'desc';
+          } else {
+              // 否则设置为升序
+              this.sortField = field;
+              this.sortOrder = 'desc';
+          }
+          this.currentPage = 1; // 每次排序后重置分页到第一页
+          this.sortBooks();
+        },
+        sortBooks() {
+            const order = this.sortOrder === 'desc' ? 1 : -1;
+            this.books.sort((a, b) => {
+                let result = 0;
+
+                switch (this.sortField) {
+                    case 'sales':
+                        result = a.sales - b.sales;
+                        break;
+                    case 'date':
+                        // 将日期字符串转换为 Date 对象再比较
+                        result = new Date(a.date) - new Date(b.date);
+                        break;
+                    case 'store':
+                        result = a.store - b.store;
+                        break;
+                    default:
+                        break;
+                }
+
+                return result * order;
+            });
+        },
+        sortBooksBySales() {
+            this.handleSort('sales');
+        },
+        sortBooksByDate() {
+            this.handleSort('date');
+        },
+        sortBooksByStore() {
+            this.handleSort('store');
         },
     },
 };
@@ -139,6 +188,14 @@ export default {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 可选：阴影 */
   border-radius: 8px; /* 可选：圆角 */
   padding: 10px 20px; /* 可选：内边距 */
+}
+
+.sort-btn {
+  margin-left: 10px;
+  background: #c9d6ff;
+  border: 1px solid #c9d6ff;
+  border-radius: 4px;
+  padding: 5px 10px;
 }
 </style>
   

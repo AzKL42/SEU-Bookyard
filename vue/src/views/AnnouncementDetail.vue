@@ -1,7 +1,7 @@
 <!--
   @author: <Applepie>
   @date: 2024/11/29
-  @description: 公告详情页面
+  @description: 公告详情页面，未实现，现有打算将其作为弹窗形式而非页面形式
 -->
 
 <template>

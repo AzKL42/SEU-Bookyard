@@ -8,7 +8,7 @@
     <div class="book-card">
       <img :src="book.cover" :alt="book.title" class="book-cover" />
       <div class="book-info">
-        <h3 class="book-title">{{ book.title }}</h3>
+        <h3 class="book-title">{{ book.bname }}</h3>
         <p class="book-author">{{ book.author }}</p>
       </div>
     </div>

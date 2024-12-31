@@ -13,7 +13,7 @@
       <el-divider></el-divider>
   
       <!-- 用户信息组件 -->
-      <UserInfo :user="user" @update="updateUserInfo" />
+      <UserInfo @update="updateUserInfo" />
     </div>
   </template>
   
@@ -25,11 +25,11 @@
     components: { UserInfo },
     data() {
       return {
-        user: {
-          name: "John Doe",
-          email: "johndoe@example.com",
-          phone: "123-456-7890",
-        },
+        // user: {
+        //   userName: "",
+        //   email: "",
+        //   userType: "",
+        // },
       };
     },
     methods: {

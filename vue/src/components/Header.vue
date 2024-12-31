@@ -30,19 +30,23 @@
 
     <!-- 右侧：导航链接和用户按钮 -->
     <div class="header-right">
+      <!-- 导航链接 -->
       <nav class="nav-links">
         <el-link href="/" type="info">首页</el-link>
         <el-link href="/catalog" type="info">书目</el-link>
         <el-link href="/records" type="info">借阅记录</el-link>
-        <el-link v-if="isLoggedIn" href="/profile" type="info">个人中心</el-link>
+        <el-link href="/profile" type="info">个人中心</el-link>
+        <el-link v-if="isAdmin" href="/bookentry" type="info">图书入库</el-link>
       </nav>
+
+      <!-- 用户动作按钮 -->
       <div class="user-actions">
-        <el-button v-if="!isLoggedIn" type="primary" @click="goToLogin">登录</el-button>
-        <el-button v-if="!isLoggedIn" type="success" @click="goToRegister">注册</el-button>
-        <div v-if="isLoggedIn" class="user-info">
+        <!-- <el-button v-if="!isLoggedIn" type="primary" @click="goToLogin">登录</el-button>
+        <el-button v-if="!isLoggedIn" type="success" @click="goToRegister">注册</el-button> -->
+        <div class="user-info">
           <el-dropdown>
             <span class="el-dropdown-link">
-              你好，{{ username }}
+              你好，{{ user.userName }}
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
@@ -61,16 +65,32 @@
 </template>
 
 <script>
-import { Search, ArrowDown } from "@element-plus/icons-vue";
+import { Search, ArrowDown, Sunny, Hide } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
+import router from "@/router";
 
 export default {
   name: "Header",
   data() {
     return {
       searchQuery: "",
-      isLoggedIn: true, // 模拟用户登录状态
-      username: "ApplePie", // 模拟登录用户名
+      isAdmin: false,
+      user: [],
     };
+  },
+  mounted() {
+    let userJson = sessionStorage.getItem("userInfo")
+    if(!userJson)
+    {
+      router.push("/login")
+      return;
+    }
+    // console.log(userJson)
+    this.userInfo = JSON.parse(userJson)
+    // console.log(this.userInfo)
+    this.user = this.userInfo.user;
+    this.isAdmin = this.userInfo.user.userType === "admin";
+    console.log(this.user)
   },
   methods: {
     handleSearch() {
@@ -90,8 +110,9 @@ export default {
       this.$router.push("/profile");
     },
     handleLogout() {
-      console.log("Logging out");
-      this.isLoggedIn = false;
+      sessionStorage.removeItem("userInfo");
+      this.$router.push("/login");
+      ElMessage.success("登出成功");
     },
   },
 };

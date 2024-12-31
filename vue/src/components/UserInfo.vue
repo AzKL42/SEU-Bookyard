@@ -22,10 +22,9 @@
           src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
         />
       </el-descriptions-item>
-      <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-      <el-descriptions-item label="电话">18100000000</el-descriptions-item>
-      <el-descriptions-item label="邮箱">1260164428@qq.com</el-descriptions-item>
-      <el-descriptions-item label="权限">管理员</el-descriptions-item>
+      <el-descriptions-item label="用户名">{{ user.userName }}</el-descriptions-item>
+      <el-descriptions-item label="邮箱">{{ user.email }}</el-descriptions-item>
+      <el-descriptions-item label="权限">{{ user.userType }}</el-descriptions-item>
       <el-descriptions-item label="Remarks">
         <el-tag size="small">School</el-tag>
       </el-descriptions-item>
@@ -83,6 +82,23 @@
 <script>
 export default {
   name: "UserInfo",
+  data() {
+    return {
+      user: {
+        userName: "",
+        email: "",
+        userType: "",
+      },
+    };
+  },
+  mounted() {
+    let userJson = sessionStorage.getItem("userInfo")
+    // console.log(userJson)
+    this.userInfo = JSON.parse(userJson)
+    // console.log(this.userInfo)
+    this.user = this.userInfo.user;
+    console.log(this.user)
+  },
   methods: {
     handleEdit() {
       this.$router.push("/edit-user-info");

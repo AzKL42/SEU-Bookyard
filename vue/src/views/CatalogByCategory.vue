@@ -8,8 +8,8 @@
   <div class="catalog-category">
     <div class="catalog-header">
       <!-- 分类选择 -->
-      <el-select v-model="selectedTheme" placeholder="主题分类" clearable @change="handleCategoryChangeTheme" style="width: 15%">
-        <el-option v-for="theme in themes" :key="theme.value" :label="theme.label" :value="theme.value" />
+      <el-select v-model="selectedType" placeholder="主题分类" clearable @change="handleCategoryChangeType" style="width: 15%">
+        <el-option v-for="type in types" :key="type.value" :label="type.label" :value="type.value" />
       </el-select>
       <el-select v-model="selectedLanguage" placeholder="语言分类" clearable @change="handleCategoryChangeLanguage" style="width: 15%">
         <el-option v-for="language in languages" :key="language.value" :label="language.label" :value="language.value" />
@@ -37,7 +37,7 @@
 
     <!-- 图书列表 -->
     <div class="book-list">
-      <BookCard v-for="book in paginatedBooks" :key="book.id" :book="book" />
+      <BookCard v-for="book in paginatedBooks" :key="book.bid" :book="book" />
     </div>
 
     <!-- 分页 -->
@@ -53,6 +53,7 @@
 
 <script>
 import BookCard from "@/components/Bookcard.vue";
+import request from "@/utils/request";
 
 export default {
   name: "CatalogByCategory",
@@ -60,11 +61,19 @@ export default {
   data() {
     return {
       // 分类内容
-      themes: [
-        { label: "Fiction", value: "fiction" },
-        { label: "Science", value: "science" },
-        { label: "History", value: "history" },
-        { label: "Technology", value: "technology" },
+      types: [
+        { label: "治愈", value: "治愈" },
+        { label: "童话", value: "童话" },
+        { label: "小说", value: "小说" },
+        { label: "管理学", value: "管理学" },
+        { label: "历史", value: "历史" },
+        { label: "心理", value: "心理" },
+        { label: "文学", value: "文学" },
+        { label: "经济", value: "经济" },
+        { label: "政治理论", value: "政治理论" },
+        { label: "艺术", value: "艺术" },
+        { label: "社会科学", value: "社会科学" },
+        { label: "计算机", value: "计算机" },
       ],
       languages: [
         { label: "English", value: "english" },
@@ -85,7 +94,7 @@ export default {
 
       // 用户选择的分类
       // 如果选择器是单选，v-model 绑定的值应为字符串，并调整筛选逻辑。如果选择器是多选，v-model 绑定的值应为数组，确保筛选逻辑支持多选情况。
-      selectedTheme: "",
+      selectedType: "",
       selectedLanguage: "",
       selectedFormat: "",
       selectedUsage: "",
@@ -93,10 +102,10 @@ export default {
 
       // 图书数据
       books: [
-        { id: 1, title: "Book 1", category: "fiction", language: "english", format: "hardcover", usage: "leisure", cover: "/img/book1.jpg" },
-        { id: 2, title: "Book 2", category: "science", language: "chinese", format: "ebook", usage: "educational", cover: "/img/book2.jpg" },
-        { id: 3, title: "Book 3", category: "history", language: "french", format: "paperback", usage: "research", cover: "/img/book3.jpg" },
-        { id: 4, title: "Book 4", category: "technology", language: "english", format: "ebook", usage: "educational", cover: "/img/Love.jpg" },
+        // { id: 1, title: "Book 1", category: "fiction", language: "english", format: "hardcover", usage: "leisure", cover: "/img/book1.jpg" },
+        // { id: 2, title: "Book 2", category: "science", language: "chinese", format: "ebook", usage: "educational", cover: "/img/book2.jpg" },
+        // { id: 3, title: "Book 3", category: "history", language: "french", format: "paperback", usage: "research", cover: "/img/book3.jpg" },
+        // { id: 4, title: "Book 4", category: "technology", language: "english", format: "ebook", usage: "educational", cover: "/img/Love.jpg" },
         // 更多图书数据
       ],
 
@@ -108,13 +117,13 @@ export default {
     // 根据分类和搜索关键词筛选图书
     filteredBooks() {
       return this.books.filter((book) => {
-        const matchTheme = !this.selectedTheme || book.category === this.selectedTheme;
+        const matchType = !this.selectedType || book.type === this.selectedType;
         const matchLanguage = !this.selectedLanguage || book.language === this.selectedLanguage;
         const matchFormat = !this.selectedFormat || book.format === this.selectedFormat;
         const matchUsage = !this.selectedUsage || book.usage === this.selectedUsage;
         const matchQuery =
-          !this.searchQuery || book.title.toLowerCase().includes(this.searchQuery.toLowerCase());
-        return matchTheme && matchLanguage && matchFormat && matchUsage && matchQuery;
+          !this.searchQuery || book.bname.toLowerCase().includes(this.searchQuery.toLowerCase());
+        return matchType && matchLanguage && matchFormat && matchUsage && matchQuery;
       });
     },
     // 分页后的图书列表
@@ -124,8 +133,22 @@ export default {
       return this.filteredBooks.slice(start, end);
     },
   },
+  created() {
+    this.fetchBooks();
+  },
   methods: {
-    handleCategoryChangeTheme() {
+    fetchBooks() {
+      request.get('/books/all')
+        .then(response => {
+          this.books = response.data.content; // 获取到所有图书数据
+          console.log('Fetched Books:', this.books);
+          //sessionStorage.setItem('books', JSON.stringify(response));
+        })
+        .catch(error => {
+          console.error('Error fetching books:', error);
+        });
+    },
+    handleCategoryChangeType() {
       this.currentPage = 1; // 切换分类后回到第一页
     },
     handleCategoryChangeLanguage() {

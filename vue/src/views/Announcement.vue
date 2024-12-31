@@ -5,78 +5,94 @@
 -->
 
 <template>
-    <div class="announcement-page">
-      <div class="announcement-header">
-        <el-input
-          v-model="searchQuery"
-          placeholder="搜索公告标题或内容"
-          clearable
-          class="search-input"
-          style="width: 50%"
-        >
-          <template #append>
-            <el-button type="primary" @click="handleSearch">
-              <el-icon><Search /></el-icon>
-            </el-button>
-          </template>
-        </el-input>
-      </div>
-  
-      <!-- 公告列表 -->
-      <div class="announcement-list">
-        <el-card
-          v-for="announcement in paginatedAnnouncements"
-          :key="announcement.id"
-          shadow="hover"
-          class="announcement-card"
-        > <!--@click="viewAnnouncement(announcement)" -->
-          <div class="announcement-title">{{ announcement.title }}</div>
-          <div class="announcement-meta">
-            <span class="announcement-date">{{ announcement.date }}</span>
-            <span class="announcement-summary">{{ announcement.summary }}</span>
-          </div>
-        </el-card>
-      </div>
-  
-      <div class="pagination-container">
-        <!-- 分页 -->
-        <el-pagination
-            layout="prev, pager, next"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="filteredAnnouncements.length"
-            @current-change="handlePageChange"
-        />
-      </div>
+  <div class="announcement-page">
+    <div class="announcement-header">
+      <el-input
+        v-model="searchQuery"
+        placeholder="搜索公告标题或内容"
+        clearable
+        class="search-input"
+        style="width: 50%"
+      >
+        <template #append>
+          <el-button type="primary" @click="handleSearch">
+            <el-icon><Search /></el-icon>
+          </el-button>
+        </template>
+      </el-input>
     </div>
+
+    <!-- 公告列表 -->
+    <div class="announcement-list">
+      <el-card
+        v-for="announcement in paginatedAnnouncements"
+        :key="announcement.id"
+        shadow="hover"
+        class="announcement-card"
+        @click="viewAnnouncement(announcement)"
+      >
+        <div class="announcement-title">{{ announcement.title }}</div>
+        <div class="announcement-meta">
+          <span class="announcement-date">{{ announcement.date }}</span>
+          <span class="announcement-summary">{{ announcement.summary }}</span>
+        </div>
+      </el-card>
+
+      <!-- 公告详情弹窗 -->
+      <el-dialog
+        title="公告详情"
+        v-model="dialogVisible"
+        fullscreen
+        center
+      > <!-- :before-close="handleClose" -->
+        <h2>{{ selectedAnnouncement.title }}</h2>
+        <el-divider></el-divider>
+        <span class="announcement-date">{{ selectedAnnouncement.date }}</span>
+        <p>{{ selectedAnnouncement.content }}</p>
+      </el-dialog>
+    </div>
+
+    <div class="pagination-container">
+      <!-- 分页 -->
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="filteredAnnouncements.length"
+        @current-change="handlePageChange"
+      />
+    </div>
+  </div>
 </template>
   
 <script>
 export default {
     name: "Announcement",
     data() {
-        return {
+      return {
         searchQuery: "", // 搜索关键字
         announcements: [
             {
-                id: 1,
-                title: "系统维护通知",
-                date: "2024-11-01",
-                summary: "系统将于本周末进行维护，期间可能无法正常使用。",
-                content: "详细内容：系统维护将从2024年11月1日晚10点持续到11月2日早6点...",
+              id: 1,
+              title: "系统维护通知",
+              date: "2024-11-01",
+              summary: "系统将于本周末进行维护，期间可能无法正常使用。",
+              content: "详细内容：系统维护将从2024年11月1日晚10点持续到11月2日早6点...",
             },
             {
-                id: 2,
-                title: "图书馆新书推荐",
-                date: "2024-10-25",
-                summary: "本周图书馆新增100本热门书籍，欢迎借阅。",
-                content: "详细内容：新增书籍包括小说、科技、历史等分类...",
+              id: 2,
+              title: "图书馆新书推荐",
+              date: "2024-10-25",
+              summary: "本周图书馆新增100本热门书籍，欢迎借阅。",
+              content: "详细内容：新增书籍包括小说、科技、历史等分类...",
             },
             // 更多公告...
         ],
-            currentPage: 1,
-            pageSize: 14, // 每页显示条数
-        };
+        currentPage: 1,
+        pageSize: 14, // 每页显示条数
+        dialogVisible: false, // 公告详细对话框是否可见
+        selectedAnnouncement: null, // 选中的公告
+      };
     },
     computed: {
         // 根据搜索关键字过滤公告
@@ -95,16 +111,24 @@ export default {
         },
     },
     methods: {
-        handleSearch() {
-            this.currentPage = 1; // 搜索后重置到第一页
-        },
-        handlePageChange(page) {
-            this.currentPage = page; // 更新当前页码
-        },
-        // viewAnnouncement(announcement) {
-        //     // 点击公告后跳转到详情页，传递公告数据
-        //     this.$router.push({ name: "AnnouncementDetail", params: { id: announcement.id } });
-        // },
+      handleSearch() {
+        this.currentPage = 1; // 搜索后重置到第一页
+      },
+      handlePageChange(page) {
+        this.currentPage = page; // 更新当前页码
+      },
+      viewAnnouncement(announcement) {
+        // 点击公告后跳出详细对话框，传递公告数据
+        this.selectedAnnouncement = announcement;
+        this.dialogVisible = true;
+      },
+      // handleClose(done) {
+      //   this.$confirm('确认关闭？')
+      //     .then(_ => {
+      //       done();
+      //     })
+      //     .catch(_ => {});
+      // }
     },
 };
 </script>
@@ -147,7 +171,7 @@ export default {
 
 .pagination-container {
   position: fixed;
-  bottom: 20px; /* 距离页面底部的距离 */
+  bottom: 10px; /* 距离页面底部的距离 */
   left: 50%; /* 水平居中 */
   transform: translateX(-50%); /* 水平居中偏移 */
   background: #c9d6ff; /* 可选：背景色 */

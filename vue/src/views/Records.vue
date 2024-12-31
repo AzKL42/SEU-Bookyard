@@ -246,10 +246,14 @@
 
 .pagination-container {
   position: fixed;
-  bottom: 20px; /* 距离页面底部的距离 */
+  bottom: 10px; /* 距离页面底部的距离 */
   left: 50%; /* 水平居中 */
   transform: translateX(-50%); /* 水平居中偏移 */
-  z-index: 10; /* 保证能显示在所有组件上方，防止遮挡（有没有更好的办法？） */
+  background: #c9d6ff; /* 可选：背景色 */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 可选：阴影 */
+  border-radius: 8px; /* 可选：圆角 */
+  padding: 10px 20px; /* 可选：内边距 */
+  z-index: 10;
 }
 </style>
   

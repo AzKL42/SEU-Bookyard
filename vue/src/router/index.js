@@ -10,9 +10,24 @@ import Layout from '../layout/Layout.vue'
 
 const routes = [
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Toggle.vue')
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/Toggle.vue')
+  },
+  {
+    path: '/forget',
+    name: 'Forget',
+    component: () => import('@/views/Forget.vue')
+  },
+  {
     path: '/',
     name: 'Home',
-    // redirect: '/', 重定向功能，需要再研究研究
+    //redirect: '/', //重定向功能，需要再研究研究
     component: Layout,
     children: [
       {
@@ -59,23 +74,13 @@ const routes = [
         path: '/change-pwd',
         name: 'Change-pwd',
         component: () => import('@/views/ChangePassword.vue')
-      }
+      },
+      {
+        path: '/bookentry',
+        name: 'BookEntry',
+        component: () => import('@/views/BookEntry.vue')
+      },
     ]
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/Toggle.vue')
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import('@/views/Toggle.vue')
-  },
-  {
-    path: '/forget',
-    name: 'Forget',
-    component: () => import('@/views/Forget.vue')
   },
 ]
 
@@ -83,5 +88,25 @@ const router = createRouter({
   history: createWebHistory(),  // import.meta.env.BASE_URL
   routes
 })
+
+// 添加全局前置守卫
+// router.beforeEach((to, from, next) => {
+//   const publicPages = ['/login', '/register', '/forget'];
+//   const authRequired = !publicPages.includes(to.path);
+//   const loggedIn = isAuthenticated(); // 可以检查登录状态
+
+//   if (authRequired && !loggedIn) {
+//     next('/login');
+//   } else if (to.path === '/login' && loggedIn) {
+//     next('/');
+//   } else {
+//     next();
+//   }
+// });
+
+// 定义一个简单的认证检查函数
+// function isAuthenticated() {
+//   return !!sessionStorage.getItem('userInfo') || !!localStorage.getItem('userInfo');
+// }
 
 export default router

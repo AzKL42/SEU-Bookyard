@@ -1,0 +1,14 @@
+/* theme.scss */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --header-bg-start: #e2e2e2;
+    --header-bg-end: #c9d6ff;
+  }
+  
+  body.dark-theme {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --header-bg-start: #333;
+    --header-bg-end: #555;
+  }

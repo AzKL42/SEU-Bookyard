@@ -72,11 +72,18 @@
           <template #title>公告栏</template>
         </el-menu-item>
 
-        <!-- 退出登录，逻辑暂时不完整 -->
-        <el-menu-item index="logout" class="logout-menu-item">
-          <el-icon><Back /></el-icon>
-          <template #title>退出登录</template>
-        </el-menu-item>
+        <!-- 底部固定菜单 -->
+        <div class="bottom-menu">
+          <el-menu-item index="profile" class="profile-menu-item">
+            <el-icon><User /></el-icon>
+            <template #title>个人中心</template>
+          </el-menu-item>
+          <!-- 退出登录，逻辑不完整，待完善 -->
+          <el-menu-item index="logout" class="logout-menu-item">
+            <el-icon><Back /></el-icon>
+            <template #title>退出登录</template>
+          </el-menu-item>
+        </div>
       </el-menu>
     </el-aside>
 
@@ -99,7 +106,6 @@ export default {
     return {
       activeMenu: "home", // 默认激活的菜单项
       isCollapsed: false, // 侧边栏是否折叠
-      isLoggedIn: true, // 是否登录
     };
   },
   methods: {
@@ -123,9 +129,12 @@ export default {
         this.$router.push("/services/reserve");
       } else if (index === "announcements") {
         this.$router.push("/announcements");
+      } else if (index === "profile") {
+        this.$router.push("/profile");
       } else if (index === "logout") {
-        console.log("Logging out");
-        this.isLoggedIn = false;
+        sessionStorage.removeItem("userInfo");
+        this.$router.push("/login");
+        ElMessage.success("登出成功");
       }
     },
   },
@@ -139,14 +148,16 @@ export default {
 }
 
 .aside-container {
+  position: relative; /* 为绝对定位提供参照 */
   background-color: #f5f7fa;
   border-right: 1px solid transparent;
   transition: width 0.3s ease;
 }
 
 .el-menu-vertical {
-  height: 100%;
+  height: calc(100% - 42px); /* 减去底部固定菜单的高度 */
   border-right: none;
+  overflow-y: auto; /* 确保内容可以滚动 */
 }
 
 .el-menu-item {
@@ -157,11 +168,20 @@ export default {
   font-size: 13px;
 }
 
-.logout-menu-item {
-  bottom: 0%;
+/* 底部固定菜单 */
+.bottom-menu {
   position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+}
+
+.bottom-menu .el-menu-item {
+  margin-bottom: 0; /* 移除默认间距 */
 }
 
 /* 控制按钮样式 */
