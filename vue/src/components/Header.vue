@@ -37,6 +37,7 @@
         <el-link href="/records" type="info">借阅记录</el-link>
         <el-link href="/profile" type="info">个人中心</el-link>
         <el-link v-if="isAdmin" href="/bookentry" type="info">图书入库</el-link>
+        <el-link v-if="isAdmin" href="/usermanagement" type="info">用户管理</el-link>
       </nav>
 
       <!-- 用户动作按钮 -->

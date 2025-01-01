@@ -25,8 +25,8 @@
       <el-descriptions-item label="用户名">{{ user.userName }}</el-descriptions-item>
       <el-descriptions-item label="邮箱">{{ user.email }}</el-descriptions-item>
       <el-descriptions-item label="权限">{{ user.userType }}</el-descriptions-item>
-      <el-descriptions-item label="Remarks">
-        <el-tag size="small">School</el-tag>
+      <el-descriptions-item label="信誉积分">
+        <el-tag size="small">{{ user.credit }}</el-tag>
       </el-descriptions-item>
     </el-descriptions>
     
@@ -85,6 +85,7 @@ export default {
         userName: "",
         email: "",
         userType: "",
+        credit: 0,
       },
     };
   },

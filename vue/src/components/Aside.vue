@@ -68,6 +68,12 @@
           <template #title>公告栏</template>
         </el-menu-item>
 
+        <!-- 排行榜 -->
+        <el-menu-item index="rankings">
+          <el-icon><Histogram /></el-icon>
+          <template #title>排行榜</template>
+        </el-menu-item>
+
         <!-- 底部固定菜单 -->
         <div class="bottom-menu">
           <el-menu-item index="profile" class="profile-menu-item">
@@ -125,6 +131,8 @@ export default {
         this.$router.push("/services/reserve");
       } else if (index === "announcements") {
         this.$router.push("/announcements");
+      } else if (index === "rankings") {
+        this.$router.push("/rankings");
       } else if (index === "profile") {
         this.$router.push("/profile");
       } else if (index === "logout") {

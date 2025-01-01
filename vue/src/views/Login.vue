@@ -49,10 +49,6 @@
       <el-button type="primary" @click="handleLogin" class="btn">登录</el-button>
     </el-form-item>
 
-    <!-- 测试按钮 -->
-    <el-form-item>
-      <el-button type="primary" @click="$router.push('/')" class="btn">直接登录</el-button>
-    </el-form-item>
   </el-form>
 </template>
 
