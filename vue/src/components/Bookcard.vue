@@ -6,7 +6,7 @@
 
 <template>
     <div class="book-card">
-      <img :src="book.cover" :alt="book.title" class="book-cover" />
+      <img :src="book.image" :alt="book.bname" class="book-cover" />
       <div class="book-info">
         <h3 class="book-title">{{ book.bname }}</h3>
         <p class="book-author">{{ book.author }}</p>

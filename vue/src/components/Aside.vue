@@ -34,10 +34,6 @@
             <el-icon><Histogram /></el-icon>
             <span>分类目录</span>
           </el-menu-item>
-          <el-menu-item index="catalog-new">
-            <el-icon><Opportunity /></el-icon>
-            <span>新书上架</span>
-          </el-menu-item>
         </el-sub-menu>
 
         <!-- 借阅记录 -->

@@ -37,27 +37,37 @@
 
     <!-- 图书列表 -->
     <div class="book-list">
-      <BookCard v-for="book in paginatedBooks" :key="book.bid" :book="book" />
+      <BookCard v-for="book in paginatedBooks" :key="book.bid" :book="book" @click="showBookDetails(book)" />
     </div>
 
-    <!-- 分页 -->
-    <el-pagination
-      layout="prev, pager, next"
-      :current-page="currentPage"
-      :page-size="pageSize"
-      :total="filteredBooks.length"
-      @current-change="handlePageChange"
+
+    <div class="pagination-container">
+      <!-- 分页 -->
+      <el-pagination
+        layout="prev, pager, next"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="filteredBooks.length"
+        @current-change="handlePageChange"
+      />
+    </div>
+
+    <BookDetailModal
+      :book="selectedBook"
+      :isVisible="isModalVisible"
+      @close="closeModal"
     />
   </div>
 </template>
 
 <script>
 import BookCard from "@/components/Bookcard.vue";
+import BookDetailModal from "@/views/BookDetailModal.vue";
 import request from "@/utils/request";
 
 export default {
   name: "CatalogByCategory",
-  components: { BookCard },
+  components: { BookCard, BookDetailModal },
   data() {
     return {
       // 分类内容
@@ -99,6 +109,8 @@ export default {
       selectedFormat: "",
       selectedUsage: "",
       searchQuery: "", // 搜索关键词
+      selectedBook: null, // **当前选择的书籍**
+      isModalVisible: false, // **控制弹窗显示与否**
 
       // 图书数据
       books: [
@@ -140,8 +152,8 @@ export default {
     fetchBooks() {
       request.get('/books/all')
         .then(response => {
-          this.books = response.data.content; // 获取到所有图书数据
-          console.log('Fetched Books:', this.books);
+          this.books = response.data; // 获取到所有图书数据
+          // console.log('Fetched Books:', this.books);
           //sessionStorage.setItem('books', JSON.stringify(response));
         })
         .catch(error => {
@@ -166,6 +178,17 @@ export default {
     handlePageChange(page) {
       this.currentPage = page; // 更新当前页码
     },
+    // **显示书籍详细信息**
+    showBookDetails(book) {
+      this.selectedBook = book;
+      this.isModalVisible = true; // **显示弹窗**
+    },
+
+    // **关闭弹窗**
+    closeModal() {
+      this.isModalVisible = false;
+      this.selectedBook = null; // 清空书籍信息
+    },
   },
 };
 </script>
@@ -187,5 +210,16 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   margin-bottom: 20px;
+}
+
+.pagination-container {
+  position: fixed;
+  bottom: 20px; /* 距离页面底部的距离 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 水平居中偏移 */
+  background: #c9d6ff; /* 可选：背景色 */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 可选：阴影 */
+  border-radius: 8px; /* 可选：圆角 */
+  padding: 10px 20px; /* 可选：内边距 */
 }
 </style>

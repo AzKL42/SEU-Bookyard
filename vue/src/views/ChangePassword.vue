@@ -20,11 +20,11 @@
     <el-divider></el-divider>
 
     <el-form ref="passwordForm" :model="form" label-width="150px" :rules="rules" class="change-password-form">
+      <el-form-item label="用户名" prop="userName">
+        <el-input type="text" v-model="form.userName" autocomplete="off" />
+      </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input type="text" v-model="form.email" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="当前密码" prop="currentPassword">
-        <el-input type="password" v-model="form.currentPassword" autocomplete="off" />
       </el-form-item>
 
       <el-form-item label="新密码" prop="newPassword">
@@ -44,18 +44,20 @@
 </template>
   
 <script>
+import request from '@/utils/request';
+
 export default {
   name: "ChangePassword",
   data() {
     return {
       form: {
-        currentPassword: "",
+        userName: "",
         newPassword: "",
         confirmPassword: "",
         email: "",
       },
       rules: {
-        currentPassword: [{ required: true, message: "Current password is required", trigger: "blur" }],
+        userName: [{ required: true, message: "Username is required", trigger: "blur" }],
         newPassword: [{ required: true, message: "New password is required", trigger: "blur" }],
         confirmPassword: [
           { required: true, message: "Please confirm your password", trigger: "blur" },
@@ -79,8 +81,22 @@ export default {
     updatePassword() {
       this.$refs.passwordForm.validate((valid) => {
         if (valid) {
-          this.$emit("password-updated");
-          this.resetForm();
+          const payload = {
+            userName: this.form.userName,
+            email: this.form.email,
+            password: this.form.newPassword,
+          };
+
+          request.post('/user/changePwd', payload)
+            .then(response => {
+              console.log('Password updated successfully:', response.data);
+              this.goBack();
+              this.$message.success('密码更新成功');
+            })
+            .catch(error => {
+              console.error('Error updating password:', error.response.data);
+              this.$message.error('密码更新失败');
+            });
         }
       });
     },

@@ -102,8 +102,8 @@ export default {
             userName: form.userName,
             password: form.password,
           }).then(response => {
-            console.log('Response:', response); // Debugging line to see the actual response
-            console.log(typeof response.data)
+            // console.log('Response:', response); // Debugging line to see the actual response
+            // console.log(typeof response.data)
 
             // 检查 response 和 response.data 是否存在并且是对象
             if (response && typeof response.data === 'object') {
