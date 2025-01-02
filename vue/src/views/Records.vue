@@ -1,238 +1,167 @@
-<!--
-  @author: <Applepie>
-  @date: 2024/11/29
-  @description: 借阅记录页面
--->
-
 <template>
-    <div class="record">
-      <div class="record-header">
-        <!-- 筛选状态 -->
-        <el-select v-model="filterStatus" placeholder="筛选/选择状态" clearable>
-          <el-option label="所有" value=""></el-option>
-          <el-option label="已借阅" value="borrowed"></el-option>
-          <el-option label="已归还" value="returned"></el-option>
-        </el-select>
-      </div>
-  
-      <!-- 借阅记录表格 -->
-      <el-table 
-        :data="paginatedRecords" 
-        :default-sort="{ prop: 'borrowDate', order: 'descending' }" 
-        border 
-        stripe
-        style="width: 100%;"
-      >
-        <el-table-column prop="title" label="书名" style="width: 20%;" ></el-table-column>
-        <el-table-column prop="name" label="借阅人" style="width: 20%;"></el-table-column>
-        <el-table-column prop="borrowDate" label="借阅日期" sortable style="width: 20%;"></el-table-column>
-        <el-table-column prop="returnDate" label="归还日期" style="width: 20%;"></el-table-column>
-        <el-table-column prop="status" label="状态" style="width: 20%;">
-          <template #default="scope">
-            <el-tag :type="getStatusType(scope.row.status)">
-              {{ scope.row.status === "borrowed" ? "Borrowed" : "Returned" }}
-            </el-tag>
-          </template>
-        </el-table-column>
-      </el-table>
-  
-      <!-- 分页 -->
-      <div class="pagination-container">
-        <el-pagination
-          layout="prev, pager, next, jumper"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          :total="filteredRecords.length"
-          :pager-count="11"
-          @current-change="handlePageChange"
-        />
-      </div>
+  <div class="record">
+    <div class="record-header">
+      <!-- 筛选状态 -->
+      <el-select v-model="filterStatus" placeholder="筛选/选择状态" clearable>
+        <el-option label="所有" value=""></el-option>
+        <el-option label="已借阅" value="borrowed"></el-option>
+        <el-option label="已归还" value="returned"></el-option>
+      </el-select>
     </div>
+
+    <!-- 借阅记录表格 -->
+    <el-table 
+      :data="paginatedRecords" 
+      :default-sort="{ prop: 'actionDate', order: 'descending' }" 
+      border 
+      stripe
+      style="width: 100%;"
+    >
+    <el-table-column v-if="false" prop="bookId" label="编号" style="width: 20%;"></el-table-column>  
+    <el-table-column prop="bookName" label="书名" style="width: 20%;"></el-table-column>
+      <el-table-column prop="userName" label="借阅人" style="width: 20%;"></el-table-column>
+      <el-table-column prop="actionDate" label="借阅日期" sortable style="width: 20%;"></el-table-column>
+      <el-table-column prop="returnDate" label="归还日期" style="width: 20%;"></el-table-column>
+      <el-table-column prop="actionType" label="状态" style="width: 20%;">
+        <template #default="scope">
+          <el-tag :type="getStatusType(scope.row.actionType)">
+            {{ scope.row.actionType === "BORROW" ? "Borrowed" : "Returned" }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
+      <!-- 归还按钮列 -->
+      <el-table-column label="操作" style="width: 15%;">
+  <template #default="scope">
+    <el-button
+      v-if="scope.row.actionType === 'BORROW'"
+      size="small"
+      type="primary"
+      @click="returnBook(scope.row)"
+    >
+      归还
+    </el-button>
+    <el-button
+      v-else
+      size="small"
+      type="primary"
+      :disabled="true"
+    >
+      已归还
+    </el-button>
   </template>
-  
-  <script>
-  export default {
-    name: "Record",
-    data() {
-      return {
-        records: [
-          {
-            id: 1,
-            title: "Book 1",
-            name: "User 1",
-            borrowDate: "2024-11-01",
-            returnDate: "2024-11-15",
-            status: "returned",
-          },
-          {
-            id: 2,
-            title: "Book 2",
-            name: "User 2",
-            borrowDate: "2024-11-05",
-            returnDate: "",
-            status: "borrowed",
-          },
-          {
-            id: 3,
-            title: "Book 3",
-            name: "User 3",
-            borrowDate: "2024-10-20",
-            returnDate: "2024-11-03",
-            status: "returned",
-          },
-          {
-            id: 4,
-            title: "Book 4",
-            name: "User 4",
-            borrowDate: "2024-11-01",
-            returnDate: "2024-11-15",
-            status: "returned",
-          },
-          {
-            id: 5,
-            title: "Book 5",
-            name: "User 5",
-            borrowDate: "2024-11-05",
-            returnDate: "",
-            status: "borrowed",
-          },
-          {
-            id: 6,
-            title: "Book 6",
-            name: "User 6",
-            borrowDate: "2024-10-20",
-            returnDate: "2024-11-03",
-            status: "returned",
-          },
-          {
-            id: 7,
-            title: "Book 7",
-            name: "User 7",
-            borrowDate: "2024-11-01",
-            returnDate: "2024-11-15",
-            status: "returned",
-          },
-          {
-            id: 8,
-            title: "Book 8",
-            name: "User 8",
-            borrowDate: "2024-11-05",
-            returnDate: "",
-            status: "borrowed",
-          },
-          {
-            id: 9,
-            title: "Book 9",
-            name: "User 9",
-            borrowDate: "2024-10-20",
-            returnDate: "2024-11-03",
-            status: "returned",
-          },
-          {
-            id: 10,
-            title: "Book 10",
-            name: "User 10",
-            borrowDate: "2024-11-01",
-            returnDate: "2024-11-15",
-            status: "returned",
-          },
-          {
-            id: 11,
-            title: "Book 11",
-            name: "User 11",
-            borrowDate: "2024-11-05",
-            returnDate: "",
-            status: "borrowed",
-          },
-          {
-            id: 12,
-            title: "Book 12",
-            name: "User 12",
-            borrowDate: "2024-10-20",
-            returnDate: "2024-11-03",
-            status: "returned",
-          },
-          {
-            id: 13,
-            title: "Book 13",
-            name: "User 13",
-            borrowDate: "2024-11-01",
-            returnDate: "2024-11-15",
-            status: "returned",
-          },
-          {
-            id: 14,
-            title: "Book 14",
-            name: "User 14",
-            borrowDate: "2024-11-05",
-            returnDate: "",
-            status: "borrowed",
-          },
-          {
-            id: 15,
-            title: "Book 15",
-            name: "User 15",
-            borrowDate: "2024-10-20",
-            returnDate: "2024-11-03",
-            status: "returned",
-          },
-          {
-            id: 16,
-            title: "Book 16",
-            name: "User 16",
-            borrowDate: "2024-11-01",
-            returnDate: "2024-11-15",
-            status: "returned",
-          },
-          {
-            id: 17,
-            title: "Book 17",
-            name: "User 17",
-            borrowDate: "2024-11-05",
-            returnDate: "",
-            status: "borrowed",
-          },
-          {
-            id: 18,
-            title: "Book 18",
-            name: "User 18",
-            borrowDate: "2024-10-20",
-            returnDate: "2024-11-03",
-            status: "returned",
-          },
-          // 添加更多借阅记录
-        ],
-        filterStatus: "", // 筛选状态
-        currentPage: 1,
-        pageSize: 16, // 每页显示条数
-      };
+</el-table-column>
+    </el-table>
+
+    <!-- 分页 -->
+    <div class="pagination-container">
+      <el-pagination
+        layout="prev, pager, next, jumper"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="filteredRecords.length"
+        :pager-count="11"
+        @current-change="handlePageChange"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import request from "@/utils/request"; // 确保引入正确的封装 axios 实例
+import request1 from "@/utils/request1"; // 确保引入正确的封装 axios 实例
+
+export default {
+  name: "Record",
+  data() {
+    return {
+      records: [], // 初始化为空数组
+      filterStatus: "", // 筛选状态
+      currentPage: 1,
+      pageSize: 16, // 每页显示条数
+      user: null, // 存储当前用户信息
+    };
+  },
+  computed: {
+    filteredRecords() {
+      // 根据状态筛选借阅记录
+      const filtered = this.filterStatus
+        ? this.records.filter((record) => record.status === this.filterStatus)
+        : this.records;
+      return filtered;
     },
-    computed: {
-      filteredRecords() {
-        // 根据状态筛选借阅记录
-        const filtered = this.filterStatus
-          ? this.records.filter((record) => record.status === this.filterStatus)
-          : this.records;
-        return filtered;
-      },
-      paginatedRecords() {
-        // 根据当前页码分页
-        const start = (this.currentPage - 1) * this.pageSize;
-        const end = start + this.pageSize;
-        return this.filteredRecords.slice(start, end);
-      },
+    paginatedRecords() {
+      // 根据当前页码分页
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.filteredRecords.slice(start, end);
     },
-    methods: {
-      handlePageChange(page) {
-        this.currentPage = page;
-      },
-      getStatusType(status) {
-        return status === "borrowed" ? "warning" : "success";
-      },
+  },
+  methods: {
+    async fetchRecords() {
+      try {
+        // 从 sessionStorage 获取当前用户信息
+        let userJson = sessionStorage.getItem("userInfo");
+        this.user = JSON.parse(userJson)?.user;
+
+        if (!this.user) {
+          alert("用户未登录，请先登录后再尝试");
+          return;
+        }
+
+        // 使用从 sessionStorage 获取的用户 ID 发起请求
+        const response = await request.get(`/record/queryByUserId`, {
+          params: { userId: this.user.uid },
+        });
+        console.log(response)
+        console.log(this.user.uid);
+        this.records = response.data.map((item) => ({
+          bookName: item.bookName || "未知书名", // 如果书名为 null，显示占位符
+          userName: item.userName || "未知用户", // 如果用户名为 null，显示占位符
+          actionDate: item.actionDate || "未知日期", // 确保日期字段有值
+          returnDate: item.returnDate || "未归还", // 如果未归还则显示占位符
+          actionType: item.actionType,
+          bookId: item.bid,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch records:", error);
+      }
     },
-  };
-  </script>
-  
+    async returnBook(record) {
+      console.log(record.bookId);
+      console.log(this.user.uid);
+    try {
+      const response = await request1.post("/books/return", {
+        bookId: record.bookId,
+        userId: this.user.uid,
+      });
+
+      // 根据后端返回的结果，更新借阅记录
+      alert(response);
+      // 刷新数据
+      this.fetchRecords();
+    } catch (error) {
+      console.error("Failed to return book:", error);
+    }
+  },
+    handlePageChange(page) {
+      this.currentPage = page;
+    },
+    getStatusType(actionType) {
+      return actionType === "BORROW" ? "warning" : "success";
+    },
+    handleReturn(record) {
+      // 处理归还操作，后续可以根据后端接口进行修改
+      alert(`归还书籍: ${record.bookName}`);
+      // 这里可以调用归还接口，更新借阅记录
+    },
+  },
+  mounted() {
+    this.fetchRecords(); // 组件加载完成后获取数据
+  },
+};
+</script>
+
 <style scoped>
 .record {
   padding: 20px;
@@ -246,14 +175,13 @@
 
 .pagination-container {
   position: fixed;
-  bottom: 10px; /* 距离页面底部的距离 */
-  left: 50%; /* 水平居中 */
-  transform: translateX(-50%); /* 水平居中偏移 */
-  background: #c9d6ff; /* 可选：背景色 */
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 可选：阴影 */
-  border-radius: 8px; /* 可选：圆角 */
-  padding: 10px 20px; /* 可选：内边距 */
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #c9d6ff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 10px 20px;
   z-index: 10;
 }
 </style>
-  

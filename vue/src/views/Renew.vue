@@ -1,9 +1,3 @@
-<!--
-  @author: <Applepie>
-  @date: 2024/11/30
-  @description: 用户续借界面
--->
-
 <template>
   <div class="borrow-or-renew">
     <h2>续借</h2>
@@ -13,6 +7,7 @@
     <div class="section">
       <h3>当前借阅</h3>
       <el-table :data="paginatedBorrowedBooks" border style="width: 100%">
+        <el-table-column v-if="false" prop="bookId" label="书编号" style="width: 20%;" />
         <el-table-column prop="title" label="书名" style="width: 20%;" />
         <el-table-column prop="borrowDate" label="借阅日期" style="width: 20%;" />
         <el-table-column prop="dueDate" label="到期日期" style="width: 20%;" />
@@ -37,55 +32,30 @@
         </el-table-column>
       </el-table>
 
-
       <div class="pagination-container">
         <el-pagination
-        layout="prev, pager, next"
-        :current-page="borrowedCurrentPage"
-        :page-size="borrowedPageSize"
-        :total="borrowedBooks.length"
-        @current-change="handleBorrowedPageChange"
-      />
+          layout="prev, pager, next"
+          :current-page="borrowedCurrentPage"
+          :page-size="borrowedPageSize"
+          :total="borrowedBooks.length"
+          @current-change="handleBorrowedPageChange"
+        />
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
+import request from "@/utils/request"; // 确保正确引入封装好的 axios 实例
+import request1 from "@/utils/request1"; // 确保正确引入封装好的 axios 实例
+
 export default {
   name: "BorrowOrRenew",
   data() {
     return {
-      // 当前借阅书籍
-      borrowedBooks: [
-        {
-          id: 1,
-          title: "Book 1",
-          borrowDate: "2024-10-01",
-          dueDate: "2024-11-01",
-          overdue: false,
-        },
-        {
-          id: 2,
-          title: "Book 2",
-          borrowDate: "2024-09-15",
-          dueDate: "2024-10-15",
-          overdue: true,
-        },
-        // 更多书籍...
-      ],
+      borrowedBooks: [], // 动态获取的当前借阅书籍
       borrowedCurrentPage: 1,
       borrowedPageSize: 5,
-
-      // 新书借阅搜索
-      searchQuery: "",
-      books: [
-        { id: 1, title: "Book A", author: "Author A" },
-        { id: 2, title: "Book B", author: "Author B" },
-        // 更多可借阅书籍...
-      ],
-      searchCurrentPage: 1,
-      searchPageSize: 5,
     };
   },
   computed: {
@@ -95,29 +65,78 @@ export default {
       const end = start + this.borrowedPageSize;
       return this.borrowedBooks.slice(start, end);
     },
-    // 搜索结果筛选和分页
-    filteredSearchResults() {
-      return this.books.filter((book) =>
-        book.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
-    paginatedSearchResults() {
-      const start = (this.searchCurrentPage - 1) * this.searchPageSize;
-      const end = start + this.searchPageSize;
-      return this.filteredSearchResults.slice(start, end);
-    },
   },
   methods: {
+    async fetchBorrowedBooks() {
+      try {
+        const userJson = sessionStorage.getItem("userInfo");
+        const user = JSON.parse(userJson)?.user;
+
+        if (!user) {
+          this.$message.error("用户未登录，请先登录后再尝试。");
+          return;
+        }
+
+        const response = await request.get("/record/queryByUserId", {
+          params: { userId: user.uid },
+        });
+        console.log(response);
+
+        this.borrowedBooks = response.data
+        .filter(record => record.actionType === "BORROW"|| record.actionType === "REBORROW")  // 只保留 actionType 为 BORROW 的项
+        .map((record) => ({
+          bookId: record.bid,
+          title: record.bookName || "未知书名",
+          borrowDate: record.actionDate || "未知日期",
+          dueDate: record.returnDate || "未知日期",
+          actionType: record.actionType,
+          overdue: new Date(record.returnDate) < new Date(),
+        }));
+        console.log(this.borrowedBooks);
+      } catch (error) {
+        console.error("Failed to fetch borrowed books:", error);
+        this.$message.error("获取借阅信息失败，请稍后重试。");
+      }
+    },
+
+    async renewBook(book) {
+      try {
+        const userJson = sessionStorage.getItem("userInfo");
+        const user = JSON.parse(userJson)?.user;
+
+        if (!user) {
+          this.$message.error("用户未登录，请先登录后再尝试。");
+          return;
+        }
+
+        const response = await request1.post("/books/reborrow", {
+          bookId: book.bookId,
+          userId: user.uid,
+        });
+
+        console.log(response);
+        this.$message.success(response);
+        this.fetchBorrowedBooks(); // 续借成功后刷新数据
+      } catch (error) {
+        console.error("Failed to renew book:", error);
+        if (error.response && error.response.data) {
+          this.$message.error(error.response.data.message);
+        } else {
+          this.$message.error("续借失败，请稍后重试。");
+        }
+      }
+    },
+
     handleBorrowedPageChange(page) {
       this.borrowedCurrentPage = page;
     },
-    renewBook(book) {
-      this.$message.success(`续借成功: ${book.title}`);
-    },
+  },
+  mounted() {
+    this.fetchBorrowedBooks(); // 组件加载完成后获取数据
   },
 };
 </script>
-  
+
 <style scoped>
 h2 {
   text-align: center;
@@ -140,11 +159,10 @@ h3 {
   bottom: 20px; /* 距离页面底部的距离 */
   left: 50%; /* 水平居中 */
   transform: translateX(-50%); /* 水平居中偏移 */
-  z-index: 10; /* 保证能显示在所有组件上方，防止遮挡（有没有更好的办法？） */
+  z-index: 10; /* 保证能显示在所有组件上方，防止遮挡 */
 }
 
 .el-button {
   width: 50%;
 }
 </style>
-  

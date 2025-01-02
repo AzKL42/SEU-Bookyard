@@ -17,52 +17,92 @@
           <button v-if="user.userType === 'admin'" @click="updateBook" class="borrow-btn">更新书籍信息</button>
           <button v-else @click="borrowBook" class="borrow-btn">借阅</button>
         </div>
+        <!-- <p v-if="borrowMessage" class="borrow-message">{{ borrowMessage }}</p> -->
       </div>
     </div>
 </template>
 
 <script>
+import request from "@/utils/request1";
 export default {
   name: "BookDetailModal",
-  data() {  
-    return {
-      user: {
-        userName: "",
-        email: "",
-        userType: "",
-      },
-    };
-  },
   props: {
     book: {
       type: Object,
       default: () => ({})
     },
+    data() {
+    return {
+      user: null, // 存储当前用户信息
+      borrowMessage:null,
+    };
+  },
     isVisible: {
       type: Boolean,
       default: false
-    }
+    },
   },
   mounted() {
-    let userJson = sessionStorage.getItem("userInfo")
-    // console.log(userJson)
-    this.userInfo = JSON.parse(userJson)
-    // console.log(this.userInfo)
+    let userJson = sessionStorage.getItem("userInfo");
+    this.userInfo = JSON.parse(userJson);
     this.user = this.userInfo.user;
-    console.log(this.user)
+    console.log(this.user);
   },
   methods: {
     close() {
       this.$emit("close");
     },
-    borrowBook() {
-      // 这里可以加入借阅的逻辑，比如弹出借阅成功的提示或调用后端接口
-      console.log(`借阅了《${this.book.bname}》`);
-      this.$emit("close");  // 关闭弹窗
-    },
     updateBook() {
       this.$router.push("/bookentry");
+    },
+    // 借阅图书
+    borrowBook() {
+      if (!this.user) {
+          alert("用户未登录，请先登录后再尝试借阅！");
+          return;
+      }
+      console.log(this.book);
+
+      const borrowRequest = {
+          bookId: this.book.bid,
+          userId: this.user.uid,
+      };
+
+      request
+          .post("/books/borrow", borrowRequest)
+          .then((response) => {
+              // 直接显示返回的消息
+              console.log(response);
+              this.borrowMessage = response;  // 后端直接返回字符串
+              console.log(this.borrowMessage);
+              alert(this.borrowMessage); // 直接显示后端返回的字符串消息
+
+              // 更新书籍库存信息（仅当成功借阅时才更新）
+              // if (this.borrowMessage.includes("借阅成功")) {
+              //     this.book.store -= 1;
+              //     this.book.sales += 1;
+              // }
+          })
+          .catch((error) => {
+              if (error.response) {
+                  const errorData = error.response.data;
+
+                  if (typeof errorData === "string") {
+                      // 针对返回的是字符串的情况
+                      alert(errorData);
+                  } else if (errorData.message) {
+                      // 针对返回 JSON 的情况，显示 message
+                      alert(errorData.message);
+                  } else {
+                      // 其他未知错误
+                      alert("借阅失败，请稍后再试！");
+                  }
+              } else {
+                  alert("网络错误，请检查您的网络连接！");
+              }
+          });
     }
+
   }
 };
 </script>
@@ -181,6 +221,11 @@ export default {
   font-size: 16px;
   width: 48%;
   transition: background-color 0.3s ease;
+}
+
+.borrow-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .borrow-btn:hover {
